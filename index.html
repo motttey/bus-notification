@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.2.4/vue.min.js" ></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+  <link href="https://fonts.googleapis.com/css?family=Passion+One" rel="stylesheet">
+
+  <title>Hino Bus</title>
+
+  <style>
+    body {
+      background: darkred;
+    }
+
+    #container {
+      text-align: center;
+      height: 100vh;
+    }
+
+    #main {
+      height: 100%;
+    }
+
+    span.current_time {
+      margin: 0px 30px 0px 30px;
+      font-family: 'Passion One', cursive;
+      font-size: 96px;
+      color: white;
+    }
+
+    span.remain_time {
+      font-family: 'Passion One', cursive;
+      font-size: 192px;
+      color: white;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div id="container">
+
+      <div id="main">
+        <div class="row">
+          <span class="remain_time">Next Bus: {{remain_moments}}</span>
+        </div>
+        <div class="row">
+          <span class="current_time">Current Time: {{now_date}}</span>
+        </div>
+
+      </div>
+  </div>
+  <script type="text/javascript">
+    let now_date = new Date();
+
+    let date_format = 'YYYY:MM:DD HH:mm:ss'
+    let next_bus_date = new Date('2018-09-22 10:30');
+    let diff_min = (next_bus_date - now_date) / 60000 * (-1);
+
+    const vue_app = new Vue({
+      el: '#main',
+      data: {
+        now_date: now_date.toISOString(),
+        remain_moments: parseInt(diff_min).toString() + "minutes",
+      },
+    });
+
+    setInterval(()=>{
+      vue_app.now_date = new Date().toISOString();
+    },1000)
+  </script>
+</body>
