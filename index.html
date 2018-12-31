@@ -24,7 +24,7 @@
       height: 100%;
     }
 
-    span.current_time {
+    span.current_time, span.next_bus_time {
       margin: 0px 30px 0px 30px;
       font-family: 'Passion One', cursive;
       font-size: 96px;
@@ -50,20 +50,32 @@
         <div class="row">
           <span class="current_time">Current Time: {{now_date}}</span>
         </div>
-
+        <div class="row">
+          <span class="next_bus_time">Next Bus Time: {{next_bus_date}}</span>
+        </div>
       </div>
   </div>
   <script type="text/javascript">
+    // TODO: 日本標準時に変更
+
     let now_date = new Date();
 
+    const bus_time_list = [
+      '2019-01-01 07:50',
+      '2019-01-01 08:30',
+      '2019-01-01 08:40'
+    ];
+
     let date_format = 'YYYY:MM:DD HH:mm:ss'
-    let next_bus_date = new Date('2018-09-22 10:30');
+    let next_bus_index = getTargetIndex(bus_time_list, now_date);
+    let next_bus_date = new Date(bus_time_list[next_bus_index]);
     let diff_min = parseInt(( getBussMins(next_bus_date) - getBussMins(now_date)) / (-1), 10);
 
     const vue_app = new Vue({
       el: '#main',
       data: {
         now_date: now_date.toISOString(),
+        next_bus_date: next_bus_date.toISOString(),
         remain_moments: parseInt(diff_min).toString() + "minutes",
       },
     });
@@ -77,6 +89,16 @@
       let mins = target_date.getMinutes();
       let seconds = target_date.getSeconds();
       return hours*60 + mins + seconds/60;
+    }
+
+    function getTargetIndex(bus_time_list, current_time){
+      bus_time_list.forEach(function(bus_time, index) {
+        let bus_date = new Date(bus_time);
+        console.log(bus_date);
+        let diff_min = getBussMins(bus_date) - getBussMins(current_time);
+        if (diff_min > 0) return index - 1;
+      });
+      return 0;
     }
   </script>
 </body>
