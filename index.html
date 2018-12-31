@@ -58,7 +58,7 @@
 
     let date_format = 'YYYY:MM:DD HH:mm:ss'
     let next_bus_date = new Date('2018-09-22 10:30');
-    let diff_min = (next_bus_date - now_date) / 60000 * (-1);
+    let diff_min = parseInt(( getBussMins(next_bus_date) - getBussMins(now_date)) / (-1), 10);
 
     const vue_app = new Vue({
       el: '#main',
@@ -71,5 +71,12 @@
     setInterval(()=>{
       vue_app.now_date = new Date().toISOString();
     },1000)
+
+    function getBussMins(target_date) {
+      let hours = target_date.getHours();
+      let mins = target_date.getMinutes();
+      let seconds = target_date.getSeconds();
+      return hours*60 + mins + seconds/60;
+    }
   </script>
 </body>
