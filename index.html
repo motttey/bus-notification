@@ -66,9 +66,14 @@
       '2019-01-01 08:40'
     ];
 
-    let date_format = 'YYYY:MM:DD HH:mm:ss'
+    const jst_hours = 1000 * 60 * 60 * 9;
+
+    let date_format = 'YYYY:MM:DD HH:mm:ss';
     let next_bus_index = getTargetIndex(bus_time_list, now_date);
     let next_bus_date = new Date(bus_time_list[next_bus_index]);
+
+    next_bus_date.setTime(next_bus_date.getTime() + jst_hours);
+
     let diff_min = parseInt(( getBussMins(next_bus_date) - getBussMins(now_date)) / (-1), 10);
 
     const vue_app = new Vue({
@@ -81,7 +86,9 @@
     });
 
     setInterval(()=>{
-      vue_app.now_date = new Date().toISOString();
+      now_date = new Date();
+      now_date.setTime(now_date.getTime() + jst_hours);
+      vue_app.now_date = now_date.toISOString();
     },1000)
 
     function getBussMins(target_date) {
