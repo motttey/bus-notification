@@ -94,8 +94,9 @@
     let next_bus_date = new Date(bus_time_list[next_bus_index]);
 
     next_bus_date.setTime(next_bus_date.getTime() + jst_hours);
+    now_date.setTime(now_date.getTime() + jst_hours);
 
-    let diff_min = parseInt(( getBussMins(next_bus_date) - getBussMins(now_date)) / (-1), 10);
+    let diff_min = parseInt(( getBusMins(next_bus_date) - getBusMins(now_date)), 10);
 
     const vue_app = new Vue({
       el: '#main',
@@ -110,17 +111,17 @@
       now_date = new Date();
       next_bus_index = getTargetIndex(bus_time_list, now_date);
       next_bus_date = new Date(bus_time_list[next_bus_index]);
-      diff_min = parseInt(( getBussMins(next_bus_date) - getBussMins(now_date)) / (-1), 10);
 
       next_bus_date.setTime(next_bus_date.getTime() + jst_hours);
       now_date.setTime(now_date.getTime() + jst_hours);
+      diff_min = parseInt(( getBusMins(next_bus_date) - getBusMins(now_date)), 10);
 
       vue_app.now_date = now_date.toISOString();
       vue_app.next_bus_date = next_bus_date.toISOString();
       vue_app.remain_moments = parseInt(diff_min).toString() + "minutes";
     },1000)
 
-    function getBussMins(target_date) {
+    function getBusMins(target_date) {
       let hours = target_date.getHours();
       let mins = target_date.getMinutes();
       let seconds = target_date.getSeconds();
@@ -131,7 +132,7 @@
       bus_time_list.forEach(function(bus_time, index) {
         let bus_date = new Date(bus_time);
         console.log(bus_date);
-        let diff_min = getBussMins(bus_date) - getBussMins(current_time);
+        let diff_min = getBusMins(bus_date) - getBusMins(current_time);
         if (diff_min > 0) return index - 1;
       });
       return 0;
