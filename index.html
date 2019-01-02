@@ -63,7 +63,28 @@
     const bus_time_list = [
       '2019-01-01 07:50',
       '2019-01-01 08:30',
-      '2019-01-01 08:40'
+      '2019-01-01 08:40',
+      '2019-01-01 09:10',
+      '2019-01-01 09:50',
+      '2019-01-01 10:20',
+      '2019-01-01 10:30',
+      '2019-01-01 11:00',
+      '2019-01-01 12:20',
+      '2019-01-01 12:50',
+      '2019-01-01 13:00',
+      '2019-01-01 13:30',
+      '2019-01-01 13:50',
+      '2019-01-01 14:20',
+      '2019-01-01 14:40',
+      '2019-01-01 15:10',
+      '2019-01-01 15:20',
+      '2019-01-01 16:00',
+      '2019-01-01 16:20',
+      '2019-01-01 16:30',
+      '2019-01-01 17:40',
+      '2019-01-01 18:00',
+      '2019-01-01 18:10',
+      '2019-01-01 18:30'
     ];
 
     const jst_hours = 1000 * 60 * 60 * 9;
@@ -87,8 +108,16 @@
 
     setInterval(()=>{
       now_date = new Date();
+      next_bus_index = getTargetIndex(bus_time_list, now_date);
+      next_bus_date = new Date(bus_time_list[next_bus_index]);
+      diff_min = parseInt(( getBussMins(next_bus_date) - getBussMins(now_date)) / (-1), 10);
+
+      next_bus_date.setTime(next_bus_date.getTime() + jst_hours);
       now_date.setTime(now_date.getTime() + jst_hours);
+
       vue_app.now_date = now_date.toISOString();
+      vue_app.next_bus_date = next_bus_date.toISOString();
+      vue_app.remain_moments = parseInt(diff_min).toString() + "minutes";
     },1000)
 
     function getBussMins(target_date) {
