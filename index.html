@@ -123,8 +123,6 @@
 
       day_of_week = now_date.getDay();
       diff_min = parseInt(( getBusMins(next_bus_date) - getBusMins(now_date)), 10);
-      console.log(next_bus_index);
-
 
       vue_app.now_date = getDateStr(now_date, now_date);
       vue_app.next_bus_date = getDateStr(now_date, next_bus_date);
@@ -146,10 +144,13 @@
 
     function getTargetIndex(bus_time_list, current_time){
       let ret_index = 0;
-      bus_time_list.forEach(function(bus_time, index) {
+      bus_time_list.some( function(bus_time, index) {
         let bus_date = new Date(bus_time);
         let diff_min = getBusMins(bus_date) - getBusMins(current_time);
-        if (diff_min > 0) ret_index = index - 1;
+        if (diff_min > 0) {
+          ret_index = index;
+          return true;
+        }
       });
       return ret_index;
     }
