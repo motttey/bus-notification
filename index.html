@@ -96,13 +96,14 @@
     next_bus_date.setTime(next_bus_date.getTime() + jst_hours);
     now_date.setTime(now_date.getTime() + jst_hours);
 
+    let day_of_week = now_date.getDay();
     let diff_min = parseInt(( getBusMins(next_bus_date) - getBusMins(now_date)), 10);
 
     const vue_app = new Vue({
       el: '#main',
       data: {
-        now_date: now_date.toISOString(),
-        next_bus_date: next_bus_date.toISOString(),
+        now_date: getDateStr(now_date, now_date),
+        next_bus_date: getDateStr(now_date, next_bus_date),
         remain_moments: parseInt(diff_min).toString() + "minutes",
       },
     });
@@ -114,10 +115,12 @@
 
       next_bus_date.setTime(next_bus_date.getTime() + jst_hours);
       now_date.setTime(now_date.getTime() + jst_hours);
-      diff_min = parseInt(( getBusMins(next_bus_date) - getBusMins(now_date)), 10);
 
-      vue_app.now_date = now_date.toISOString();
-      vue_app.next_bus_date = next_bus_date.toISOString();
+      day_of_week = now_date.getDay();
+      diff_min = parseInt(( getBusMins(next_bus_date) - getBusMins(now_date)), 10);
+      console.log(next_bus_index);
+      vue_app.now_date = getDateStr(now_date, now_date);
+      vue_app.next_bus_date = getDateStr(now_date, next_bus_date);
       vue_app.remain_moments = parseInt(diff_min).toString() + "minutes";
     },1000)
 
@@ -128,14 +131,20 @@
       return hours*60 + mins + seconds/60;
     }
 
+    function getDateStr(now_date, next_bus_date) {
+      let now_date_str = now_date.toISOString();
+      let next_bus_date_str = next_bus_date.toISOString();
+      return now_date_str.split('T')[0] + " " + next_bus_date_str.split('T')[1];
+    }
+
     function getTargetIndex(bus_time_list, current_time){
+      let ret_index = 0;
       bus_time_list.forEach(function(bus_time, index) {
         let bus_date = new Date(bus_time);
-        console.log(bus_date);
         let diff_min = getBusMins(bus_date) - getBusMins(current_time);
-        if (diff_min > 0) return index - 1;
+        if (diff_min > 0) ret_index = index - 1;
       });
-      return 0;
+      return ret_index;
     }
   </script>
 </body>
