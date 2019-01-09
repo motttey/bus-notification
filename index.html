@@ -62,47 +62,48 @@
     // TODO: 日本標準時に変更
 
     let now_date = new Date();
+    let day_of_week = now_date.getDay();
 
-    const bus_time_list = [
-      '2019-01-01 07:50',
-      '2019-01-01 08:30',
-      '2019-01-01 08:40',
-      '2019-01-01 09:10',
-      '2019-01-01 09:50',
-      '2019-01-01 10:20',
-      '2019-01-01 10:30',
-      '2019-01-01 11:00',
-      '2019-01-01 12:20',
-      '2019-01-01 12:50',
-      '2019-01-01 13:00',
-      '2019-01-01 13:30',
-      '2019-01-01 13:50',
-      '2019-01-01 14:20',
-      '2019-01-01 14:40',
-      '2019-01-01 15:10',
-      '2019-01-01 15:20',
-      '2019-01-01 16:00',
-      '2019-01-01 16:20',
-      '2019-01-01 16:30',
-      '2019-01-01 17:40',
-      '2019-01-01 18:00',
-      '2019-01-01 18:10',
-      '2019-01-01 18:30'
-    ];
+    let hinoday_flag = (day_of_week !== 3 && hino_month.includes(now_date.getUTCMonth()))? true: false;
+    let operated_flag = (day_of_week !== 0 && day_of_week !== 7)? true: false;
 
-    const bus_time_list_hinoday = [
-      '2019-01-01 08:25',
-      '2019-01-01 08:35',
-      '2019-01-01 09:45',
-      '2019-01-01 10:50',
-      '2019-01-01 12:45',
-      '2019-01-01 12:50',
-      '2019-01-01 14:15',
-      '2019-01-01 14:35',
-      '2019-01-01 15:55',
-      '2019-01-01 16:20',
-      '2019-01-01 17:50',
-      '2019-01-01 18:05'
+    const bus_time_list_wendsday = [
+      {date: '2019-01-01 07:50', wendsday: false},
+      {date: '2019-01-01 08:25', wendsday: true},
+      {date: '2019-01-01 08:30', wendsday: false},
+      {date: '2019-01-01 08:35', wendsday: true},
+      {date: '2019-01-01 08:40', wendsday: false},
+      {date: '2019-01-01 09:10', wendsday: false},
+      {date: '2019-01-01 09:45', wendsday: true},
+      {date: '2019-01-01 09:50', wendsday: false},
+      {date: '2019-01-01 09:10', wendsday: false},
+      {date: '2019-01-01 10:20', wendsday: false},
+      {date: '2019-01-01 10:30', wendsday: false},
+      {date: '2019-01-01 10:50', wendsday: true},
+      {date: '2019-01-01 11:00', wendsday: false},
+      {date: '2019-01-01 12:20', wendsday: false},
+      {date: '2019-01-01 12:45', wendsday: true},
+      {date: '2019-01-01 12:50', wendsday: true},
+      {date: '2019-01-01 12:50', wendsday: false},
+      {date: '2019-01-01 13:00', wendsday: false},
+      {date: '2019-01-01 13:30', wendsday: false},
+      {date: '2019-01-01 13:50', wendsday: false},
+      {date: '2019-01-01 14:15', wendsday: true},
+      {date: '2019-01-01 14:20', wendsday: false},
+      {date: '2019-01-01 14:35', wendsday: true},
+      {date: '2019-01-01 14:40', wendsday: false},
+      {date: '2019-01-01 15:10', wendsday: false},
+      {date: '2019-01-01 15:20', wendsday: false},
+      {date: '2019-01-01 15:55', wendsday: true},
+      {date: '2019-01-01 16:00', wendsday: false},
+      {date: '2019-01-01 16:20', wendsday: false},
+      {date: '2019-01-01 16:20', wendsday: true},
+      {date: '2019-01-01 17:40', wendsday: false},
+      {date: '2019-01-01 17:50', wendsday: true},
+      {date: '2019-01-01 18:00', wendsday: false},
+      {date: '2019-01-01 18:05', wendsday: true},
+      {date: '2019-01-01 18:10', wendsday: false},
+      {date: '2019-01-01 18:30', wendsday: false},
     ];
 
     const hino_month = [10, 11, 12, 1, 2];
@@ -110,16 +111,13 @@
     const jst_hours = 1000 * 60 * 60 * 9;
 
     let date_format = 'YYYY:MM:DD HH:mm:ss';
-    let next_bus_index = getTargetIndex(bus_time_list, now_date);
-    let next_bus_date = new Date(bus_time_list[next_bus_index]);
+    let next_bus_index = getTargetIndex(bus_time_list_wendsday, hinoday_flag, now_date);
+    let next_bus_date = new Date(bus_time_list_wendsday[next_bus_index]["date"]);
+    console.log(next_bus_date);
 
     next_bus_date.setTime(next_bus_date.getTime() + jst_hours);
     now_date.setTime(now_date.getTime() + jst_hours);
 
-    let day_of_week = now_date.getDay();
-
-    let hinoday_flag = (day_of_week !== 3 && hino_month.includes(now_date.getUTCMonth()))? true: false;
-    let operated_flag = (day_of_week !== 0 && day_of_week !== 7)? true: false;
     let diff_min = parseInt(( getBusMins(next_bus_date) - getBusMins(now_date)), 10);
 
     const vue_app = new Vue({
@@ -134,8 +132,8 @@
 
     setInterval(()=>{
       now_date = new Date();
-      next_bus_index = getTargetIndex(bus_time_list, now_date);
-      next_bus_date = new Date(bus_time_list[next_bus_index]);
+      next_bus_index = getTargetIndex(bus_time_list_wendsday, hinoday_flag, now_date);
+      next_bus_date = new Date(bus_time_list_wendsday[next_bus_index]["date"]);
 
       next_bus_date.setTime(next_bus_date.getTime() + jst_hours);
       now_date.setTime(now_date.getTime() + jst_hours);
@@ -161,15 +159,18 @@
       return now_date_str.split('T')[0] + " " + next_bus_date_str.split('T')[1];
     }
 
-    function getTargetIndex(bus_time_list, current_time){
+    function getTargetIndex(bus_time_list, hinoday_flag, current_time){
       let ret_index = 0;
       bus_time_list.some( function(bus_time, index) {
-        let bus_date = new Date(bus_time);
-        let diff_min = getBusMins(bus_date) - getBusMins(current_time);
-        if (diff_min > 0) {
-          ret_index = index;
-          return true;
+        if (!bus_time["wendsday"] || (hinoday_flag && bus_time["wendsday"])) {
+          let bus_date = new Date(bus_time["date"]);
+          let diff_min = getBusMins(bus_date) - getBusMins(current_time);
+          if (diff_min > 0) {
+            ret_index = index;
+            return true;
+          }
         }
+
       });
       return ret_index;
     }
