@@ -12,7 +12,8 @@
 
   <style>
     body {
-      background: darkred;
+      background: slategray;
+      /*　時間が近いと darkred に変更 */
     }
 
     #container {
@@ -42,7 +43,6 @@
 
 <body>
   <div id="container">
-
       <div id="main">
         <div class="row" v-if="operated">
           <span class="remain_time">Next Bus: {{remain_moments}}</span>
@@ -60,7 +60,10 @@
   </div>
   <script type="text/javascript">
     // TODO: 日本標準時に変更
+    // 運用区間に変更, inRange関数を作る
     const hino_month = [10, 11, 12, 1, 2];
+    // 休み区間のrangeに変更
+    const without_bus_month = [3, 8]
     const jst_hours = 1000 * 60 * 60 * 9;
 
     const bus_time_list_wendsday = [
@@ -104,9 +107,10 @@
 
     let now_date = new Date();
     let day_of_week = now_date.getDay();
+    let month = now_date.getUTCMonth();
 
-    let hinoday_flag = (day_of_week !== 3 && hino_month.includes(now_date.getUTCMonth()))? true: false;
-    let operated_flag = (day_of_week !== 0 && day_of_week !== 7)? true: false;
+    let hinoday_flag = (day_of_week !== 3 && hino_month.includes(month))? true: false;
+    let operated_flag = (day_of_week !== 0 && day_of_week !== 7 && without_bus_month.includes(month) != false)? true: false;
 
     let date_format = 'YYYY:MM:DD HH:mm:ss';
     let next_bus_index = getTargetIndex(bus_time_list_wendsday, hinoday_flag, now_date);
